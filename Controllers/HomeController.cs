@@ -68,47 +68,46 @@ namespace products_categories.Controllers
             return View("addCategory");
         }
 
-        [HttpGet("oneProduct")]
-        public IActionResult OneProduct()
+        [HttpGet("oneProduct/{PID}")]
+        public IActionResult OneProduct(int PID)
         {
-            List<Product> allproducts = _context.Products.ToList();
-            ViewBag.allproducts = allproducts;
-            List<Category> allcategories = _context.Categories.ToList();
-            ViewBag.allcategories = allcategories;
+            Product one = _context.Products.Include(p => p.Categories).ThenInclude(ti => ti.Category).FirstOrDefault(fd => fd.Productid == PID);
+            ViewBag.AllCategories = _context.Categories.OrderBy(c => c.Categoryname).ToList();
+            return View(one);
 
-            return View("oneProduct");
+            //return View("oneProduct");
         }
 
-        //   [HttpGet("/oneProduct/{dId}")]
-        // public IActionResult OneProduct(int dId)
-        // {
-        //     Product one = _context.Products.FirstOrDefault(d => d.Productid == dId);
-        //     if (one == null)
-        //     {
-        //         return RedirectToAction("index");
-        //     }
-
-        //     return View("Oneproduct",one);
-        //}
-
-        // [HttpPost("prodAssociation")]
-        // public IActionResult ProdAssociation(Association prodAssociation)
-        // {
-        //     {
-        //         _context.Add(prodAssociation);
-        //         return RedirectToAction("index");
-        //     }
-
-        // }
-
-
-        [HttpGet("oneCategory")]
-        public IActionResult OneCategory()
+        [HttpPost("prodAssociation")]
+        public IActionResult ProdAssociation(Association prodAssociation)
         {
-            List<Category> allcategories = _context.Categories.ToList();
-            ViewBag.allcategories = allcategories;
-            // ViewBag.OneProduct = _context.Products.Include(d => d.Preparer).OrderByDescending(d => d.CreatedAt).ToList();
-            return View("oneCategory");
+            {
+                _context.Add(prodAssociation);
+                _context.SaveChanges();
+                return Redirect($"/oneProduct/{prodAssociation.Productid}");
+            }
+
+        }
+
+
+        [HttpGet("oneCategory/{PID}")]
+        public IActionResult OneCategory(int PID)
+        {
+            Category one = _context.Categories.Include(c => c.Products).ThenInclude(ti => ti.Product).FirstOrDefault(fd => fd.Categoryid == PID);
+            ViewBag.AllProducts = _context.Products.OrderBy(p => p.Productname).ToList();
+            return View(one);
+        }
+
+        
+        [HttpPost("catgAssociation")]
+        public IActionResult CatgAssociation(Association catgAssociation)
+        {
+            {
+                _context.Add(catgAssociation);
+                _context.SaveChanges();
+                return Redirect($"/oneCategory/{catgAssociation.Productid}");
+            }
+
         }
     }
 }

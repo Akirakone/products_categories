@@ -1,7 +1,47 @@
 @using products_categories.Models
-@model Association
+@model Product
 
-@foreach (Product p in ViewBag.allproducts)
+ <h1>@Model.Productname</h1>
+<a href="/product/delete/@Model.Productid" class="btn btn-danger">Delete</a>
+
+<div class="text-center row">
+
+    <div class="col-6">
+        <h2>Categories</h2>
+        <ul>
+            @{
+                foreach(Association a in Model.Categories)
+                {
+                    <li>@a.Category.Categoryname <a href="/delete/asso/@a.Categoryid/@Model.Productid"> - X</a></li>
+                }
+            }
+        </ul>
+        
+    </div>
+    <div class="col-5">
+        <h4>Have a new Product?<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Add Now!</a></h4>
+        
+        <form action="/ProdAssociation" method="post">
+            <div class="form-group">
+                <label>Give Product a Category</label>
+                <select name="CategoryId" id="CategoryId" class="form-control col-4">
+                    @{
+                        foreach (Category c in ViewBag.AllCategories)
+                        {
+                            if(!Model.Categories.Any(s => s.Categoryid == c.Categoryid))
+                            {
+                                <option value="@c.Categoryid">@c.Categoryname</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <input type="hidden" name="ProductId" value="@Model.Productid">
+            <input type="Submit" value="Add" class="btn btn-info">
+        </form>
+    </div>
+</div>
+@* @foreach (Product p in ViewBag.allproducts)
 {
 <h1>
         @p.Productname
@@ -23,4 +63,4 @@
     <div class="d-flex justify-content-between">
         <input type="submit" value="Add To Category" class="btn btn-primary">
     </div>
-</form>
+</form> *@
