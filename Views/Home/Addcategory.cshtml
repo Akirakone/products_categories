@@ -1,0 +1,42 @@
+<h1> New Products</h1>
+@using products_categories.Models
+@model Category
+
+
+<body
+    class="p-3 mb-2 bg-secondary text-white nes-text text-left container d-flex justify-content-center align-items-center">
+    <div class="nes-container is-dark">
+        <div style=" padding: 1rem;" class="nes-field is-inline">
+            <form asp-action="NewCategory" method="post">
+                <div class="form-group">
+                    <label for="Categoryname">Name :</label>
+                    <input asp-for="Categoryname" class="form-control">
+                    <span asp-validation-for="Categoryname" class="text-danger"></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <input type="submit" value="Add Category" class="btn btn-primary">
+                </div>
+            </form>
+            <h1> Existing Categories</h1>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th> Existing Categories</th>
+                            </tr>
+                            @{
+                                foreach (Category c in ViewBag.allcategories)
+                                {
+                                    <tr>
+                                        <td><a href="oneCategory">@c.Categoryname</a </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
